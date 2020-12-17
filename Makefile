@@ -43,6 +43,8 @@ pipenv: # installs pipenv if necessary
 
 install: pipenv ## Install dependencies
 	$(PIPENV) install
+	@# https://stackoverflow.com/questions/62590761/an-error-occured-while-installing-flair-and-pytorch-with-pipenv-in-windows-with
+	$(PIPENV) run pip install --no-deps torchvision
 
 notebook: ## Serve locally the jupyter notebook
 	$(PIPENV) run jupyter notebook

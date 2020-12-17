@@ -14,6 +14,7 @@ tensorflow = "*"
 keras = "*"
 pandas = "*"
 pillow = "*"
+torch = "*"
 
 [dev-packages]
 autopep8 = "*"
