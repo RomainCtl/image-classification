@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "83af7430d37b0d9c5cd9272428ef6188f986e7e16019f56195483b44fdde3cb3"
+            "sha256": "35c91e9c367094eb739975a3767609130e7e924ec03ee58b41fdaa1d9d5a961b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -86,11 +86,11 @@
         },
         "cachetools": {
             "hashes": [
-                "sha256:513d4ff98dd27f85743a8dc0e92f55ddb1b49e060c2d5961512855cda2c01a98",
-                "sha256:bbaa39c3dede00175df2dc2b03d0cf18dd2d32a7de7beb68072d13043c9edb20"
+                "sha256:3796e1de094f0eaca982441c92ce96c68c89cced4cd97721ab297ea4b16db90e",
+                "sha256:c6b07a6ded8c78bf36730b3dc452dfff7d95f2a12a2fed856b1a0cb13ca78c61"
             ],
             "markers": "python_version ~= '3.5'",
-            "version": "==4.1.1"
+            "version": "==4.2.0"
         },
         "certifi": {
             "hashes": [
@@ -319,11 +319,11 @@
         },
         "ipykernel": {
             "hashes": [
-                "sha256:9b2652af1607986a1b231c62302d070bc0534f564c393a5d9d130db9abbbe89d",
-                "sha256:d6fbba26dba3cebd411382bc484f7bc2caa98427ae0ddb4ab37fe8bfeb5c7dd3"
+                "sha256:496c27cd9922724d2847d3e7085390123e5210b58aff6fed767e67a9b2800ae3",
+                "sha256:ddd4247ab83d18ae79b05f5e2d6cc58ca29a8034425d5ee6922e5a98b7cbdbe6"
             ],
             "markers": "python_version >= '3.5'",
-            "version": "==5.3.4"
+            "version": "==5.4.0"
         },
         "ipython": {
             "hashes": [
@@ -737,7 +737,7 @@
                 "sha256:eb472586374dc66b31e36e14720747595c2b265ae962987261f044e5cce644b5",
                 "sha256:fbd922f702582cb0d71ef94442bfca57624352622d75e3be7a1e7e9360b07e72"
             ],
-            "markers": "python_version >= '3.6'",
+            "index": "pypi",
             "version": "==8.0.1"
         },
         "prometheus-client": {
@@ -1175,11 +1175,11 @@
         },
         "tifffile": {
             "hashes": [
-                "sha256:5a388f8f3ca3f69a62f7c1cda72837fa5e9070e89992e7702408a786d526b3ff",
-                "sha256:c6c043ad28742c638ea20cee279b0f1a4da6b7fc57a37f7bf78861d4da11e2fe"
+                "sha256:6c65c3997a21cad40349921e557a383fd5f0ebd728f5e91fa6c8f8f9e45c4bbd",
+                "sha256:78e7fe7d27fdd3fbd67cc95aaa8265c43b942170bd2473b1d587dcc849822892"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2020.12.4"
+            "version": "==2020.12.8"
         },
         "tornado": {
             "hashes": [

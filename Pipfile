@@ -13,6 +13,7 @@ scikit-image = "*"
 tensorflow = "*"
 keras = "*"
 pandas = "*"
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"
