@@ -17,6 +17,9 @@ else
 	PYTHON := python3
 endif
 
+CORELDB_PATH = "data/CorelDB/"
+DATA_PATH = "data/"
+
 # --------------------------------------------------------
 # Commands
 
@@ -46,7 +49,12 @@ notebook: ## Serve locally the jupyter notebook
 
 clean: ## Delete all generated files in project folder
 	rm -Rf **/__pycache__
+	rm -Rf **/cache
 	$(PIPENV) --rm
+
+split-dataset: ## Split coreldb to 3 dataset (test, train, validation)
+	rm -rf $(DATA_PATH)/test $(DATA_PATH)/train $(DATA_PATH)/validation
+	$(PYTHON_ENV) src/split_dataset.py -c $(CORELDB_PATH) -d $(DATA_PATH)
 
 # --------------------------------------------------------
 ##@ Commons basics tasks
