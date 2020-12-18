@@ -8,7 +8,7 @@ from gabor import Gabor
 from HOG import HOG
 from vggnet import VGGNetFeat
 from resnet import ResNetFeat
-
+from fusion import FeatureFusion
 
 from itertools import groupby
 from statistics import mean
@@ -77,16 +77,23 @@ if __name__ == "__main__":
         "edge": Edge(),
         "gabor": Gabor(),
         "hog": HOG(),
-        "vggnetfeat": VGGNetFeat(),
-        "resnetfeat": ResNetFeat(),
+        "vgg": VGGNetFeat(),
+        "res": ResNetFeat(),
     }
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-D", "--depth", help="Define depth",
                         type=int, default=3)
-    parser.add_argument("-a", "--algo", help="Algorithm to launch",
+    egroup = parser.add_mutually_exclusive_group(required=True)
+    egroup.add_argument("-a", "--algo", help="Algorithm to launch",
                         choices=list(algo.keys()))
+    egroup.add_argument("-f", "--fusion", help="Use feature fusion method",
+                        type=str, nargs="+", choices=list(algo.keys()))
     args = parser.parse_args()
 
+    # The parser forces to have at least T xor V as argument
     if args.algo:
         launch(algo[args.algo], args.depth)
+
+    if args.fusion:
+        launch(FeatureFusion(features=args.fusion), depth=args.depth)
