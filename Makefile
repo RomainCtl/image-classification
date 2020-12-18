@@ -8,21 +8,13 @@ default: help	# default target
 # Variables
 # ========================================================
 
-PYTHON = ""
-
-# https://stackoverflow.com/questions/714100/os-detecting-makefile/12099167#12099167
-ifeq ($(OS),Windows_NT)
-	PYTHON := python
-else
-	PYTHON := python3
-endif
-
 CORELDB_PATH = "data/CorelDB/"
 DATA_PATH = "data/"
 
 # --------------------------------------------------------
 # Commands
 
+PYTHON = python # or python3 if your OS use python2
 PIPENV = $(PYTHON) -m pipenv
 PYTHON_ENV = $(PIPENV) run $(PYTHON)
 
@@ -46,9 +38,6 @@ install: pipenv ## Install dependencies
 	@# https://stackoverflow.com/questions/62590761/an-error-occured-while-installing-flair-and-pytorch-with-pipenv-in-windows-with
 	$(PIPENV) run pip install --no-deps torchvision
 
-notebook: ## Serve locally the jupyter notebook
-	$(PIPENV) run jupyter notebook
-
 clean: ## Delete all generated files in project folder
 	rm -Rf **/__pycache__
 	rm -Rf **/cache
@@ -58,6 +47,9 @@ split-dataset: ## Split coreldb to 3 dataset (test, train, validation)
 	rm -rf $(DATA_PATH)/test $(DATA_PATH)/train $(DATA_PATH)/validation
 	$(PYTHON_ENV) src/split_dataset.py -c $(CORELDB_PATH) -d $(DATA_PATH)
 
+cbir: ## Classify image using CBIR (usage: 'make cbir -- --help')
+	cd src/CBIR && $(PYTHON_ENV) scripts/classify.py $(filter-out $@,$(MAKECMDGOALS))
+
 # --------------------------------------------------------
 ##@ Commons basics tasks
 # --------------------------------------------------------
@@ -65,6 +57,10 @@ split-dataset: ## Split coreldb to 3 dataset (test, train, validation)
 # source: https://stackoverflow.com/questions/2214575/passing-arguments-to-make-run
 bash: ## Open a new bash session
 	bash
+
+# source: https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
+%:
+	@:
 
 # source: https://suva.sh/posts/well-documented-makefiles/
 help:  ## Display this help

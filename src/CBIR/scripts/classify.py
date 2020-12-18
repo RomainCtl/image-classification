@@ -103,9 +103,9 @@ if __name__ == "__main__":
     parser.add_argument("-D", "--depth", help="Define depth",
                         type=int, default=3)
     egroup = parser.add_mutually_exclusive_group(required=True)
-    egroup.add_argument("-a", "--feature", help="Feature to launch",
+    egroup.add_argument("-a", "--feature", help="Feature to launch (mutually exclusive with '--fusion')",
                         choices=list(features.keys()))
-    egroup.add_argument("-f", "--fusion", help="Use feature fusion method",
+    egroup.add_argument("-f", "--fusion", help="Use feature fusion method (mutually exclusive with '--feature')",
                         type=feature, nargs="+")
     args = parser.parse_args()
 
