@@ -27,7 +27,7 @@ class Database(object):
         with open(self.labels, 'w', encoding='UTF-8') as f:
             f.write("img,cls")
             for root, _, files in os.walk(self.db_path, topdown=False):
-                cls = root.split('/')[-1]
+                cls = os.path.basename(os.path.normpath(root))
                 for name in files:
                     if not name.endswith('.jpg'):
                         continue
