@@ -8,3 +8,6 @@ data/validation/
 data/CorelDB/
 Thumbs.db
 cache/
+
+src/CBIR/data.csv
+src/CBIR/result/*.csv
