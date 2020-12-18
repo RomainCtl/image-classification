@@ -22,7 +22,7 @@ step = 10
 radius = 20
 rings = 2
 histograms = 6
-h_type = 'region'
+h_type = 'global'  # 'region'
 d_type = 'd1'
 
 depth = 3
@@ -98,7 +98,8 @@ class Daisy(object):
 
             for hs in range(len(h_silce)-1):
                 for ws in range(len(w_slice)-1):
-                    img_r = img[h_silce[hs]:h_silce[hs+1], w_slice[ws]:w_slice[ws+1]]  # slice img to regions
+                    img_r = img[h_silce[hs]:h_silce[hs+1], w_slice[ws]
+                        :w_slice[ws+1]]  # slice img to regions
                     hist[hs][ws] = self._daisy(img_r)
 
         if normalize:
