@@ -47,13 +47,19 @@ def knn(query, samples, depth=3):
 
 
 def launch(method, depth: int = 3):
+    """Launch a classification algorithm. Train on a first dataset, and validate it with a second (and print result)
+
+    Args:
+        method (object): Class object that have a make_samples function
+        depth (int, optional): Means the system will return top-depth images. Defaults to 3.
+    """
     db_train = Database(DB_TRAIN)
     db_validation = Database(DB_VALIDATION)
 
     train_samples = method.make_samples(db_train)
     validation_samples = method.make_samples(db_validation)
 
-    final = {cl: [0, 0] for cl in db_train.get_class()}
+    final = {cl: [0, 0] for cl in sorted(db_train.get_class())}
 
     for img in validation_samples:
         selected_class = knn(img, train_samples, depth=depth)
@@ -70,30 +76,43 @@ def launch(method, depth: int = 3):
             f"{cl.ljust(col_width)}: {v[0]}/{v[1]}\t{round(v[0]*100/v[1], 2)} %")
 
 
-if __name__ == "__main__":
-    algo = {
-        "color": Color(),
-        "daisy": Daisy(),
-        "edge": Edge(),
-        "gabor": Gabor(),
-        "hog": HOG(),
-        "vgg": VGGNetFeat(),
-        "res": ResNetFeat(),
-    }
+def feature(s):
+    try:
+        name, weight = s.split(':')
+        weight = int(weight)
+        if name not in features.keys() or weight < 1:
+            raise Exception
+        return name, weight
+    except:
+        raise argparse.ArgumentTypeError(
+            f"\nFeature must be 'name:weight'\n\tname in {features.keys()}\n\tweight >= 1")
 
+
+features = {
+    "color": Color(),
+    "daisy": Daisy(),
+    "edge": Edge(),
+    "gabor": Gabor(),
+    "hog": HOG(),
+    "vgg": VGGNetFeat(),
+    "res": ResNetFeat(),
+}
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-D", "--depth", help="Define depth",
                         type=int, default=3)
     egroup = parser.add_mutually_exclusive_group(required=True)
-    egroup.add_argument("-a", "--algo", help="Algorithm to launch",
-                        choices=list(algo.keys()))
+    egroup.add_argument("-a", "--feature", help="Feature to launch",
+                        choices=list(features.keys()))
     egroup.add_argument("-f", "--fusion", help="Use feature fusion method",
-                        type=str, nargs="+", choices=list(algo.keys()))
+                        type=feature, nargs="+")
     args = parser.parse_args()
 
     # The parser forces to have at least T xor V as argument
-    if args.algo:
-        launch(algo[args.algo], args.depth)
+    if args.feature:
+        launch(features[args.feature], args.depth)
 
     if args.fusion:
-        launch(FeatureFusion(features=args.fusion), depth=args.depth)
+        feats = {f[0]: f[1] for f in args.fusion}
+        launch(FeatureFusion(features=feats), depth=args.depth)

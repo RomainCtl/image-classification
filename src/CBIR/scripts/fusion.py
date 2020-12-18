@@ -38,12 +38,14 @@ class FeatureFusion(object):
 
     def make_samples(self, db, verbose=False):
         if verbose:
-            print("Use features {}".format(" & ".join(self.features)))
+            print("Use features {}".format(" & ".join(self.features.keys())))
 
         if self.samples == None:
             feats = []
-            for f_class in self.features:
-                feats.append(self._get_feat(db, f_class))
+            for f_class, weight in self.features.items():
+                res = self._get_feat(db, f_class)
+                for _ in range(weight):
+                    feats.append(res)
             samples = self._concat_feat(db, feats)
             self.samples = samples  # cache the result
         return self.samples
