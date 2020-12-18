@@ -1,7 +1,13 @@
 from evaluate import infer
+from DB import Database, DB_TRAIN, DB_VALIDATION
+
 from color import Color
 from daisy import Daisy
-from DB import Database, DB_TRAIN, DB_VALIDATION
+from edge import Edge
+from gabor import Gabor
+from HOG import HOG
+from vggnet import VGGNetFeat
+from resnet import ResNetFeat
 
 
 from itertools import groupby
@@ -57,6 +63,7 @@ def launch(method, depth: int = 3):
         final[img['cls']][1] += 1
 
     # Beautiful print
+    print("\n========= Result =========")
     col_width = max(len(cl) for cl, v in final.items()) + 2
     for cl, v in final.items():
         print(
@@ -66,7 +73,12 @@ def launch(method, depth: int = 3):
 if __name__ == "__main__":
     algo = {
         "color": Color(),
-        "daisy": Daisy()
+        "daisy": Daisy(),
+        "edge": Edge(),
+        "gabor": Gabor(),
+        "hog": HOG(),
+        "vggnetfeat": VGGNetFeat(),
+        "resnetfeat": ResNetFeat(),
     }
 
     parser = argparse.ArgumentParser()
