@@ -2,9 +2,6 @@
 
 from __future__ import print_function
 
-from itertools import groupby
-from statistics import mean
-
 from scipy import spatial
 import numpy as np
 
@@ -155,34 +152,3 @@ def evaluate_class(db, f_class=None, f_instance=None, depth=None, d_type='d1'):
         ret[query['cls']].append(ap)
 
     return ret
-
-
-def knn(query, samples, depth=3):
-    """Infer a query with K-nearsest neighbors strategy
-
-    Args:
-        query (dict): { 'img': <path_to_img>, 'cls': <img class>, 'hist' <img histogram> }
-        samples (list): list of { 'img': <path_to_img>, 'cls': <img class>, 'hist' <img histogram> }
-        depth (int, optional): retrieved depth during inference. Defaults to 3.
-
-    Returns:
-        str: selected class
-    """
-    _, results = infer(query, samples, depth=depth)
-    # Group by class
-    res = sorted(results, key=lambda x: x['cls'])
-    grouped_by_class = {
-        k: list(map(lambda x: x['dis'], g))
-        for k, g in groupby(res, key=lambda x: x['cls'])
-    }
-    # Calc average by class
-    grouped_by_class = {
-        k: mean(v) for k, v in grouped_by_class.items()
-        # k: len(v) for k, v in grouped_by_class.items()
-    }
-    # Get max
-    selected_class = sorted(
-        grouped_by_class.items(), key=lambda x: x[1]
-    )[:1][0][0]
-
-    return selected_class

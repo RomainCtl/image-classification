@@ -13,7 +13,7 @@ LABELS = 'data.csv'
 
 class Database(object):
 
-    def __init__(self, db_path: str = '../../data/train', labels: str = 'data.csv'):
+    def __init__(self, db_path: str = DB_TRAIN, labels: str = LABELS):
         self.labels = labels
         self.db_path = db_path
 

@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-from evaluate import distance, evaluate_class, knn
+from evaluate import distance, evaluate_class
 from DB import Database, DB_TRAIN, DB_VALIDATION
 
 from six.moves import cPickle
@@ -165,67 +165,44 @@ class Color(object):
 
 
 if __name__ == "__main__":
-    # db = Database()
-    # data = db.get_data()
-    # color = Color()
-
-    # # test normalize
-    # hist = color.histogram(data.iloc[0, 0], type='global')
-    # assert hist.sum() - 1 < 1e-9, "normalize false"
-
-    # # test histogram bins
-    # def sigmoid(z):
-    #     a = 1.0 / (1.0 + np.exp(-1. * z))
-    #     return a
-    # np.random.seed(0)
-    # IMG = sigmoid(np.random.randn(2, 2, 3)) * 255
-    # IMG = IMG.astype(int)
-    # hist = color.histogram(IMG, type='global', n_bin=4)
-    # assert np.equal(np.where(hist > 0)[0], np.array(
-    #     [37, 43, 58, 61])).all(), "global histogram implement failed"
-    # hist = color.histogram(IMG, type='region', n_bin=4, n_slice=2)
-    # assert np.equal(np.where(hist > 0)[0], np.array(
-    #     [58, 125, 165, 235])).all(), "region histogram implement failed"
-
-    # # examinate distance
-    # np.random.seed(1)
-    # IMG = sigmoid(np.random.randn(4, 4, 3)) * 255
-    # IMG = IMG.astype(int)
-    # hist = color.histogram(IMG, type='region', n_bin=4, n_slice=2)
-    # IMG2 = sigmoid(np.random.randn(4, 4, 3)) * 255
-    # IMG2 = IMG2.astype(int)
-    # hist2 = color.histogram(IMG2, type='region', n_bin=4, n_slice=2)
-    # assert distance(hist, hist2, d_type='d1') == 2, "d1 implement failed"
-    # assert distance(hist, hist2, d_type='d2-norm') == 2, "d2 implement failed"
-
-    # # evaluate database
-    # APs = evaluate_class(db, f_class=Color, d_type=d_type, depth=depth)
-    # cls_MAPs = []
-    # for cls, cls_APs in APs.items():
-    #     MAP = np.mean(cls_APs)
-    #     print("Class {}, MAP {}".format(cls, MAP))
-    #     cls_MAPs.append(MAP)
-    # print("MMAP", np.mean(cls_MAPs))
-
+    db = Database()
+    data = db.get_data()
     color = Color()
 
-    db_train = Database(DB_TRAIN)
-    db_validation = Database(DB_VALIDATION)
+    # test normalize
+    hist = color.histogram(data.iloc[0, 0], type='global')
+    assert hist.sum() - 1 < 1e-9, "normalize false"
 
-    train_samples = color.make_samples(db_train)
-    validation_samples = color.make_samples(db_validation)
+    # test histogram bins
+    def sigmoid(z):
+        a = 1.0 / (1.0 + np.exp(-1. * z))
+        return a
+    np.random.seed(0)
+    IMG = sigmoid(np.random.randn(2, 2, 3)) * 255
+    IMG = IMG.astype(int)
+    hist = color.histogram(IMG, type='global', n_bin=4)
+    assert np.equal(np.where(hist > 0)[0], np.array(
+        [37, 43, 58, 61])).all(), "global histogram implement failed"
+    hist = color.histogram(IMG, type='region', n_bin=4, n_slice=2)
+    assert np.equal(np.where(hist > 0)[0], np.array(
+        [58, 125, 165, 235])).all(), "region histogram implement failed"
 
-    final = {cl: [0, 0] for cl in db_train.get_class()}
+    # examinate distance
+    np.random.seed(1)
+    IMG = sigmoid(np.random.randn(4, 4, 3)) * 255
+    IMG = IMG.astype(int)
+    hist = color.histogram(IMG, type='region', n_bin=4, n_slice=2)
+    IMG2 = sigmoid(np.random.randn(4, 4, 3)) * 255
+    IMG2 = IMG2.astype(int)
+    hist2 = color.histogram(IMG2, type='region', n_bin=4, n_slice=2)
+    assert distance(hist, hist2, d_type='d1') == 2, "d1 implement failed"
+    assert distance(hist, hist2, d_type='d2-norm') == 2, "d2 implement failed"
 
-    for img in validation_samples:
-        selected_class = knn(img, train_samples, depth=3)
-
-        if img['cls'] == selected_class:
-            final[img['cls']][0] += 1
-        final[img['cls']][1] += 1
-
-    # Beautiful print
-    col_width = max(len(cl) for cl, v in final.items()) + 2
-    for cl, v in final.items():
-        print(
-            f"{cl.ljust(col_width)}: {v[0]}/{v[1]}\t{round(v[0]*100/v[1], 2)} %")
+    # evaluate database
+    APs = evaluate_class(db, f_class=Color, d_type=d_type, depth=depth)
+    cls_MAPs = []
+    for cls, cls_APs in APs.items():
+        MAP = np.mean(cls_APs)
+        print("Class {}, MAP {}".format(cls, MAP))
+        cls_MAPs.append(MAP)
+    print("MMAP", np.mean(cls_MAPs))
