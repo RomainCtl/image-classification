@@ -27,6 +27,8 @@ if __name__ == '__main__':
     _, result = infer(query, samples=samples, depth=depth, d_type=d_type)
     print(result)
 
+    exit()
+
     # retrieve by daisy
     method = Daisy()
     samples = method.make_samples(db)

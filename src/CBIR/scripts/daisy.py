@@ -107,7 +107,8 @@ class Daisy(object):
         return hist.flatten()
 
     def _daisy(self, img, normalize=True):
-        image = color.rgb2gray(img)
+        # image = color.rgb2gray(img)
+        image = (255.*color.rgb2gray(img)).astype(int)
         descs = daisy(image, step=step, radius=radius, rings=rings,
                       histograms=histograms, orientations=n_orient)
         descs = descs.reshape(-1, R)  # shape=(N, R)
