@@ -1,5 +1,6 @@
 from evaluate import infer
 from color import Color
+from daisy import Daisy
 from DB import Database, DB_TRAIN, DB_VALIDATION
 
 
@@ -39,7 +40,7 @@ def knn(query, samples, depth=3):
     return selected_class
 
 
-def launch(method):
+def launch(method, depth: int = 3):
     db_train = Database(DB_TRAIN)
     db_validation = Database(DB_VALIDATION)
 
@@ -49,7 +50,7 @@ def launch(method):
     final = {cl: [0, 0] for cl in db_train.get_class()}
 
     for img in validation_samples:
-        selected_class = knn(img, train_samples, depth=3)
+        selected_class = knn(img, train_samples, depth=depth)
 
         if img['cls'] == selected_class:
             final[img['cls']][0] += 1
@@ -63,10 +64,17 @@ def launch(method):
 
 
 if __name__ == "__main__":
+    algo = {
+        "color": Color(),
+        "daisy": Daisy()
+    }
+
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-c", "--color", help="Launch color alg", action="store_true")
+    parser.add_argument("-D", "--depth", help="Define depth",
+                        type=int, default=3)
+    parser.add_argument("-a", "--algo", help="Algorithm to launch",
+                        choices=list(algo.keys()))
     args = parser.parse_args()
 
-    if args.color:
-        launch(Color())
+    if args.algo:
+        launch(algo[args.algo], args.depth)
