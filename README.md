@@ -16,7 +16,7 @@ Random split coreldb to 3 dataset (test, train, validation):
 make split-dataset
 ```
 
-### Image classification based on attributes (*CBIR*)
+### Image classification based on attributes (*CBIR* = *content-based image retrieval*)
 
 Feature list: `[color, daisy, edge, gabor, hog, vgg, res]`
 
@@ -51,6 +51,34 @@ optional arguments:
                         Use feature fusion method
 ```
 
-### Image classification based on a neural network
+### Image classification based on a neural network (*CNN* = *convolutional neural network*)
 
-*coming soon*
+```bash
+# Launch CNN classification with default args
+make cnn
+
+# Launch CNN classification with epochs=50 and rewrite weights (re-train the model)
+make cnn -- -e 50 -R
+```
+
+If you do not want to use `make`:
+```bash
+# Launch CNN classification with default args
+cd src/CNN && python -m pipenv run python neural_model.py
+
+# Launch CNN classification with epochs=50 and rewrite weights (re-train the model)
+cd src/CNN && python -m pipenv run python neural_model.py -e 50 -R
+```
+
+Full usage help (from `make cnn -- --help`):
+```
+usage: neural_model.py [-h] [-e EPOCHS] [-b BATCH_SIZE] [-R] [-H]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e EPOCHS, --epochs EPOCHS
+  -b BATCH_SIZE, --batch-size BATCH_SIZE
+  -R, --rewrite-weights
+                        Re-write weights
+  -H, --hide-plots      Hide plots
+```

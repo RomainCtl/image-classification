@@ -46,9 +46,13 @@ clean: ## Delete all generated files in project folder
 split-dataset: ## Split coreldb to 3 dataset (test, train, validation)
 	rm -rf $(DATA_PATH)/test $(DATA_PATH)/train $(DATA_PATH)/validation
 	$(PYTHON_ENV) src/split_dataset.py -c $(CORELDB_PATH) -d $(DATA_PATH)
+	@echo "Selected class: " & ls $(DATA_PATH)/test
 
 cbir: ## Classify image using CBIR (usage: 'make cbir -- --help')
 	cd src/CBIR && $(PYTHON_ENV) scripts/classify.py $(filter-out $@,$(MAKECMDGOALS))
+
+cnn: ## Classify image using CBIR (usage: 'make cnn -- --help')
+	cd src/CNN && $(PYTHON_ENV) neural_model.py $(filter-out $@,$(MAKECMDGOALS))
 
 # --------------------------------------------------------
 ##@ Commons basics tasks

@@ -11,3 +11,5 @@ cache/
 
 src/CBIR/data.csv
 src/CBIR/result/*.csv
+
+src/CNN/result/*.h5

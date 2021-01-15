@@ -109,7 +109,7 @@ if __name__ == "__main__":
                         type=feature, nargs="+")
     args = parser.parse_args()
 
-    # The parser forces to have at least T xor V as argument
+    # The parser forces to have at least feature xor fusion as argument
     if args.feature:
         launch(features[args.feature], args.depth)
 
