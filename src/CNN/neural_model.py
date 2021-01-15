@@ -9,6 +9,10 @@ import argparse
 
 from database import Database
 
+# Usefull links:
+# http://playground.tensorflow.org/ Understand and test a neural network (tensorflow)
+# https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html (this code is inspired from this page)
+
 
 class CNNModel(Sequential):
     def __init__(self, database, show_plot=False, rewrite_weights=False):
@@ -18,9 +22,9 @@ class CNNModel(Sequential):
         self.show_plot = show_plot
         self.rewrite_weights = rewrite_weights
 
-        self.target_size = (150, 150)
-
-        self.add(Conv2D(32, (3, 3), input_shape=(*self.target_size, 3)))
+        # # Create a simple stack of 3 convolution layer with ReLU (Rectified Linear Unit) activation and followed by max-pooling layers
+        # 150, 150 = target_size (width, height)
+        self.add(Conv2D(32, (3, 3), input_shape=(150, 150, 3)))
         self.add(Activation('relu'))
         self.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -32,13 +36,14 @@ class CNNModel(Sequential):
         self.add(Activation('relu'))
         self.add(MaxPooling2D(pool_size=(2, 2)))
 
-        # the model so far outputs 3D feature maps (height, width, features)
+        # # The model so far outputs 3D feature maps (height, width, features)
+        # Flatten: this converts our 3D feature maps to 1D feature vectors (To end the model with a single unit)
         self.add(Flatten())
         self.add(Dense(64))
         self.add(Activation('relu'))
         self.add(Dropout(0.5))
         self.add(Dense(len(self.database)))
-        self.add(Activation('softmax'))
+        self.add(Activation('sigmoid'))
 
         self.compile(
             loss='sparse_categorical_crossentropy',
@@ -47,6 +52,12 @@ class CNNModel(Sequential):
         )
 
     def train(self, batch_size=16, epochs=50):
+        """Train the model (use train and validation dataset)
+
+        Args:
+            batch_size (int, optional): Size of the batchs. Defaults to 16.
+            epochs (int, optional): Number of learning cycles. Defaults to 50.
+        """
         # if weights exist, just load previously generated model
         weights_path = os.path.join(
             'result', self.database.get_weights_filename())
@@ -55,8 +66,10 @@ class CNNModel(Sequential):
             print("Model already performed !")
             return
 
-        train = self.database.get_image_data_generator('train')
-        validation = self.database.get_image_data_generator('validation')
+        train = self.database.get_image_data_generator(
+            'train', batch_size=batch_size)
+        validation = self.database.get_image_data_generator(
+            'validation', batch_size=batch_size)
 
         # Model training
         history = self.fit(train, epochs=epochs, validation_data=validation)
@@ -69,12 +82,16 @@ class CNNModel(Sequential):
             for key in history.history.keys():
                 plt.plot(history.history[key])
 
+            # legend start with 'val_*' if for the validation dataset
             plt.ylabel("accuracy or loss")
             plt.xlabel("epoch")
             plt.legend(history.history.keys())
             plt.show()
 
     def test(self):
+        """Test the generated model with the 'test' dataset. This function will predict class of images in 'test' dataset.
+        It will display a confusion matrix if 'self.show_plot' is True (using matplotlib).
+        """
         test = self.database.get_image_data_generator("test", shuffle=False)
 
         # Predict
