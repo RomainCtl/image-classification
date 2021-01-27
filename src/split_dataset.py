@@ -41,9 +41,15 @@ def split_data(classes: list, data_path: str, coreldb_path: str, test: float = 0
     assert train + validation + test == 1
 
     folders = ('test', 'train', 'validation')
+    # Delete old datasets
+    for folder in folders:
+        shutil.rmtree(os.path.join(data_path, folder), ignore_errors=True)
+
+    # Create news one
     for folder in folders:
         os.mkdir(os.path.join(data_path, folder))
 
+    # Copy and split all image in the three folders
     for classe in classes:
         img_list = os.listdir(os.path.join(coreldb_path, classe))
 
@@ -73,15 +79,33 @@ if __name__ == '__main__':
     parser.add_argument(
         "-c", "--coreldb-path",
         type=str,
-        default="data/CorelDB/")
+        default="data/CorelDB/",
+        help="Corel db path (default: data/CorelDB)")
     parser.add_argument(
         "-d", "--data-path",
         type=str,
-        default="data/")
+        default="data/",
+        help="Data path (default: data/)")
+    parser.add_argument(
+        "-C", "--classes",
+        nargs="+",
+        default=None,
+        help="Selected classes (default: random)")
+    parser.add_argument(
+        "-n",
+        type=int,
+        default=5,
+        help="Number of classes if '--classes' not used (default: 5)")
     args = parser.parse_args()
 
+    selected_class = args.classes
+    if selected_class is None:
+        selected_class = choose_classes(args.n, args.coreldb_path)
+
     split_data(
-        choose_classes(5, args.coreldb_path),
+        selected_class,
         args.data_path,
         args.coreldb_path
     )
+
+    print("Selected class: ", ", ".join(selected_class))
