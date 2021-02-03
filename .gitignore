@@ -11,5 +11,7 @@ cache/
 
 src/CBIR/data.csv
 src/CBIR/result/*.csv
+src/CBIR/result/retrieval/*
+!src/CBIR/result/retrieval/.gitkeep
 
 src/CNN/result/*.h5

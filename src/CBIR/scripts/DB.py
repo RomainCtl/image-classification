@@ -8,6 +8,8 @@ DB_VALIDATION = '../../data/validation'
 DB_TEST = '../../data/test'
 LABELS = 'data.csv'
 
+RESULT_RETRIEVAL = 'result/retrieval/'
+
 
 class Database(object):
 

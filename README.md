@@ -43,8 +43,8 @@ usage: classify.py [-h] [-D DEPTH] (-a {color,daisy,edge,gabor,hog,vgg,res} | -f
 
 optional arguments:
   -h, --help            show this help message and exit
-  -D DEPTH, --depth DEPTH
-                        Define depth
+  -n NEIGHBOR, --neighbor NEIGHBOR
+                        neighbor by class
   -a {color,daisy,edge,gabor,hog,vgg,res}, --feature {color,daisy,edge,gabor,hog,vgg,res}
                         Feature to launch
   -f FUSION [FUSION ...], --fusion FUSION [FUSION ...]

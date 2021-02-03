@@ -43,7 +43,7 @@ class CNNModel(Sequential):
         self.add(Activation('relu'))
         self.add(Dropout(0.5))
         self.add(Dense(len(self.database)))
-        self.add(Activation('sigmoid'))
+        self.add(Activation('softmax'))
 
         self.compile(
             loss='sparse_categorical_crossentropy',

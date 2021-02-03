@@ -37,8 +37,8 @@ install: pipenv ## Install dependencies
 
 clean: ## Delete all generated files in project folder
 	rm -Rf **/__pycache__
-	rm -Rf **/cache
-	$(PIPENV) --rm
+	rm -Rf src/CBIR/cache
+	rm -Rf src/CBIR/data.csv
 
 split-dataset: ## Split coreldb to 3 dataset (test, train, validation) (usage: 'make split-dataset -- --help')
 	$(PYTHON_ENV) src/split_dataset.py $(filter-out $@,$(MAKECMDGOALS))
@@ -46,7 +46,7 @@ split-dataset: ## Split coreldb to 3 dataset (test, train, validation) (usage: '
 cbir: ## Classify image using CBIR (usage: 'make cbir -- --help')
 	cd src/CBIR && $(PYTHON_ENV) scripts/classify.py $(filter-out $@,$(MAKECMDGOALS))
 
-cnn: ## Classify image using CBIR (usage: 'make cnn -- --help')
+cnn: ## Classify image using CNN (usage: 'make cnn -- --help')
 	cd src/CNN && $(PYTHON_ENV) neural_model.py $(filter-out $@,$(MAKECMDGOALS))
 
 # --------------------------------------------------------
