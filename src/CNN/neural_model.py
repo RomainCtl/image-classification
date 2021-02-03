@@ -5,9 +5,10 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, F
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 import matplotlib.pyplot as plt
 import os
+import shutil
 import argparse
 
-from database import Database
+from database import Database, RESULT_RETRIEVAL
 
 # Usefull links:
 # http://playground.tensorflow.org/ Understand and test a neural network (tensorflow)
@@ -15,12 +16,13 @@ from database import Database
 
 
 class CNNModel(Sequential):
-    def __init__(self, database, show_plot=False, rewrite_weights=False):
+    def __init__(self, database, show_plot=False, rewrite_weights=False, store_test_result=False):
         super().__init__()
 
         self.database = database
         self.show_plot = show_plot
         self.rewrite_weights = rewrite_weights
+        self.store_test_result = store_test_result
 
         # # Create a simple stack of 3 convolution layer with ReLU (Rectified Linear Unit) activation and followed by max-pooling layers
         # 150, 150 = target_size (width, height)
@@ -97,7 +99,26 @@ class CNNModel(Sequential):
         # Predict
         predictions = argmax(self.predict(test), axis=1).numpy()
 
+        # Store image class result if asked
+        if self.store_test_result:
+            # Delete previous result
+            for classe in self.database.get_class():
+                shutil.rmtree(os.path.join(RESULT_RETRIEVAL, classe), ignore_errors=True)
+            # and re-create directory
+            for classe in self.database.get_class():
+                os.mkdir(os.path.join(RESULT_RETRIEVAL, classe))
+
+            for i in range(len(predictions)):
+                selected_class = self.database.get_class()[predictions[i]]
+                filename = os.path.basename(test.filenames[i])
+
+                shutil.copy(
+                    os.path.join(self.database.db_path, "test", test.filenames[i]),
+                    os.path.join(RESULT_RETRIEVAL, selected_class, filename)
+                )
+
         if self.show_plot:
+            # show result plot
             cmatrix = confusion_matrix(
                 test.classes, predictions, normalize='true')
             display = ConfusionMatrixDisplay(
@@ -114,13 +135,16 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("-H", "--hide-plots", help="Hide plots",
                         action="store_true")
+    parser.add_argument("-s", help="Store test result (in src/CNN/result/retrieval/)",
+                        action="store_true")
     args = parser.parse_args()
 
     #
     model = CNNModel(
         database=Database(),
         rewrite_weights=args.rewrite_weights,
-        show_plot=(not args.hide_plots)
+        show_plot=(not args.hide_plots),
+        store_test_result=args.s
     )
     model.train(batch_size=args.batch_size, epochs=args.epochs)
     model.test()

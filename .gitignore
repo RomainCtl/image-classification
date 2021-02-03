@@ -15,3 +15,5 @@ src/CBIR/result/retrieval/*
 !src/CBIR/result/retrieval/.gitkeep
 
 src/CNN/result/*.h5
+src/CNN/result/retrieval/*
+!src/CNN/result/retrieval/.gitkeep

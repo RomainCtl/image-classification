@@ -1,10 +1,8 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 
-# DB_TRAIN = '../../data/train'
-# DB_VALIDATION = '../../data/validation'
-# DB_TEST = '../../data/test'
 DB_PATH = '../../data/'
+RESULT_RETRIEVAL = 'result/retrieval/'
 
 
 class Database(object):
